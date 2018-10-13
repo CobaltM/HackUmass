@@ -59,9 +59,7 @@ devid = '';
 const authEndpoint = 'https://accounts.spotify.com/authorize';
 
 var currentplaylist = '["spotify:track:51KKQAgYFoJHgVIuJWHdHb","spotify:track:3ctALmweZBapfBdFiIVpji"]';
-socket.emit('playlist', {
-						lists: currentplaylist
-					});
+
 // Replace with your app's client ID, redirect URI and desired scopes
 const clientId = 'c45b9f08b8f94e9fb5650ab6bf202238';
 const redirectUri = 'http://localhost:3000/master/';
@@ -97,8 +95,19 @@ window.onSpotifyPlayerAPIReady = () => {
 	// Playback status updates
 	player.on('player_state_changed', state => {
 		console.log(state)
+	//	socket.emit('playlist', {
+	//					lists: currentplaylist
+	//				});
 		socket.emit('time', {
 						stamp: state.position
+					});
+		if(state.paused)
+			socket.emit('paus', {
+						pau: false
+					});
+		else
+			socket.emit('paus', {
+						pau: true
 					});
 		$('#current-track').attr('src', state.track_window.current_track.album.images[0].url);
 		$('#current-track-name').text(state.track_window.current_track.name);

@@ -59,7 +59,9 @@ devid = '';
 const authEndpoint = 'https://accounts.spotify.com/authorize';
 
 var currentplaylist = '["spotify:track:51KKQAgYFoJHgVIuJWHdHb","spotify:track:3ctALmweZBapfBdFiIVpji"]';
-
+socket.on('playlist', function(list){
+	currentplaylist = list.lists;
+});
 // Replace with your app's client ID, redirect URI and desired scopes
 const clientId = 'c45b9f08b8f94e9fb5650ab6bf202238';
 const redirectUri = 'http://localhost:3000/room/';
@@ -110,17 +112,7 @@ window.onSpotifyPlayerAPIReady = () => {
 
 	//toggle
 	socket.on('paus', function(pau){
-		$.ajax({
-			url: "https://api.spotify.com/v1/me/player/play?device_id=" + devid,
-			type: "PUT",
-
-			beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + _token );},
-			success: function(data) { 
-				player.pause().then(() => {
-				  console.log('Changed position!');
-				});
-			}
-		});
+		pause(devid);
 	});
 	socket.on('time', function(pos){
 		$.ajax({
@@ -161,6 +153,19 @@ window.onSpotifyPlayerAPIReady = () => {
 				});
 			}
 		});
+	}
+	function pause(devid){
+		$.ajax({
+			url: "https://api.spotify.com/v1/me/player/play?device_id=" + devid,
+			type: "PUT",
+
+			beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + _token );},
+				success: function(data) { 
+					player.togglePlay().then(() => {
+					  console.log('Paused!');
+					});
+				}
+			});
 	}
 }
 

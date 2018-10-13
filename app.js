@@ -57,10 +57,10 @@ io.on('connection',function(socket){
 	socket.on('time',function(pos){
 		io.sockets.emit('time',pos);
 	});
-	socket.on('paus'),function(pau){
-		io.sockets.emit('paus',pos);
+	socket.on('paus',function(pau){
+		io.sockets.emit('paus',pau);
 	});
-	socket.on('playlist'),function(list){
-		io.sockets.emit('playlist',pos);
+	socket.on('playlist',function(list){
+		io.sockets.emit('playlist',list);
 	});
 });
