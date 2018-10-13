@@ -8,22 +8,26 @@ var valid;
 
 
 //room page
-app.get('/room/',function(req,res) {
-	res.sendFile(path.join(__dirname+'/roomPage.html'));
+app.get('/master/',function(req,res) {
+	res.sendFile(path.join(__dirname+'/masterresources/roomPage.html'));
 });
-app.use('/room/socketscript.js',function(req,res){
-	res.sendFile(path.join(__dirname+'/socketscript.js'));
+app.use('/master/script.js',function(req,res){
+	res.sendFile(path.join(__dirname+'/masterresources/script.js'));
 });
-app.use('/room/script.js',function(req,res){
-	res.sendFile(path.join(__dirname+'/script.js'));
+app.use('/master/styleRoomPage.css',function(req,res){
+	res.sendFile(path.join(__dirname+'/masterresources/styleRoomPage.css'));
 });
-app.use('/room/styleRoomPage.css',function(req,res){
-	res.sendFile(path.join(__dirname+'/styleRoomPage.css'));
-});
-app.use('/room/logo.png',function(req,res){
-	res.sendFile(path.join(__dirname+'/logo.png'));
+app.use('/master/logo.png',function(req,res){
+	res.sendFile(path.join(__dirname+'/masterresources/logo.png'));
 });
 //end room page
+
+app.get('/room/',function(req,res) {
+	res.sendFile(path.join(__dirname+'/rresources/roomPage.html'));
+});
+app.use('/room/script.js',function(req,res){
+	res.sendFile(path.join(__dirname+'/rresources/script.js'));
+});
 
 
 
@@ -50,7 +54,13 @@ io.on('connection',function(socket){
 	socket.on('chat',function(data){
 		io.sockets.emit('chat',data);
 	});
-	socket.on('time',function(data){
-		io.sockets.emit('time',data);
+	socket.on('time',function(pos){
+		io.sockets.emit('time',pos);
+	});
+	socket.on('paus'),function(pau){
+		io.sockets.emit('paus',pos);
+	});
+	socket.on('playlist'),function(list){
+		io.sockets.emit('playlist',pos);
 	});
 });

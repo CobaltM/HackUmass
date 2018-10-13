@@ -1,0 +1,49 @@
+<html>
+	<head>
+		<title> Room Page - Radio Free </title>
+		<script
+      src="https://code.jquery.com/jquery-3.2.1.min.js"
+      integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+      crossorigin="anonymous"></script>	
+<!-- Include the Web Playback SDK -->
+		<script src="https://sdk.scdn.co/spotify-player.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.dev.js"></script>
+    <!-- Include our Javascript -->
+		<script src="script.js" defer></script>
+	<!-- socket -->
+		
+	</head>
+	
+
+	<body>
+		
+		<div class="leftside">
+			<button id="pause">PAUSE</button>
+			<p>		
+			<img id="current-track"/>
+			<h3 id="current-track-name"></h3>
+			</head>
+			</p>
+
+			<p>Song URI's</p>
+			<div id='playlist'><input type="text" name="URL" placeholder='"spotify:track:0dEIca2nhcxDUV8C5QkPYb","spotify:track:3ctALmweZBapfBdFiIVpji"'></div>
+			
+		</div>\
+        <div id="cchat">
+            <h2>Chat</h2>
+            <div id="chat-window">
+                <div id="output"></div>
+            </div>
+            <input id="handle" type="text" placeholder="Handle" />
+            <input id="message" type="text" placeholder="Message" />
+            <button id="send">Send</button>
+        </div>
+
+    </body>
+			</p>
+			<p><input type="submit" name="submit" value="Submit"></p>		
+		</div>
+		</div>
+		
+	</body>
+</html>
