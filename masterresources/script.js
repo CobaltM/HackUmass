@@ -1,5 +1,5 @@
 // Get the hash of the url
-var socket = io.connect('spotifysync.herokuapp.com/master');
+var socket = io.connect('spotifysync.herokuapp.com');
 
 // Query DOM
 var message = document.getElementById('message'),
