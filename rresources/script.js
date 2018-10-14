@@ -1,5 +1,5 @@
 // Get the hash of the url
-var socket = io.connect('localhost:3000');
+var socket = io.connect('spotifysync.herokuapp.com');
 
 // Query DOM
 var message = document.getElementById('message'),
@@ -64,7 +64,7 @@ socket.on('playlist', function(list){
 });
 // Replace with your app's client ID, redirect URI and desired scopes
 const clientId = 'c45b9f08b8f94e9fb5650ab6bf202238';
-const redirectUri = 'http://localhost:3000/room/';
+const redirectUri = 'https://spotifysync.herokuapp.com/room/';
 const scopes = [
 'streaming',
 'playlist-read-private',
@@ -113,7 +113,7 @@ window.onSpotifyPlayerAPIReady = () => {
 		play(data.device_id,currentplaylist);
 	});
     // Connect to the player!
-	player.connect(); 
+	player.connect();
 
 	//toggle
 
@@ -123,9 +123,9 @@ window.onSpotifyPlayerAPIReady = () => {
 			type: "PUT",
 
 			beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + _token );},
-			success: function(data) { 
+			success: function(data) {
 				if(pos.st){
-					marker = true;	
+					marker = true;
 					player.togglePlay().then(() => {
 					  console.log('Toggled playback!');
 					});
@@ -136,7 +136,7 @@ window.onSpotifyPlayerAPIReady = () => {
 				  console.log(pos.st);
 				});
 			}
-				
+
 			}
 		});
 	});
@@ -147,7 +147,7 @@ window.onSpotifyPlayerAPIReady = () => {
 			type: "PUT",
 			data: '{"uris":'+currp+' }',
 			beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + _token );},
-			success: function(data) { 
+			success: function(data) {
 				player.getCurrentState().then(state => {
 					if (!state) {
 						console.error('User is not playing music through the Web Playback SDK');
@@ -167,7 +167,3 @@ window.onSpotifyPlayerAPIReady = () => {
 		});
 	}
 }
-
-
-
-
