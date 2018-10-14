@@ -8,7 +8,7 @@ var valid;
 
 
 //room page
-app.get('/master/',function(req,res) {
+app.get('/',function(req,res) {
 	res.sendFile(path.join(__dirname+'/masterresources/roomPage.html'));
 });
 app.use('/master/script.js',function(req,res){
@@ -36,13 +36,13 @@ app.use('/room/script.js',function(req,res){
 
 
 
-/* Server Configuration Section */ 
+/* Server Configuration Section */
 
 var server = app.listen(3000, function () {
 	var host = server.address().address
 	var port = server.address().port
 	console.log("Example app listening at http://%s:%s", host, port)
-}); 
+});
 
 
 
