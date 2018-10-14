@@ -8,7 +8,7 @@ var valid;
 
 
 //room page
-app.get('/',function(req,res) {
+app.get('/master/',function(req,res) {
 	res.sendFile(path.join(__dirname+'/masterresources/roomPage.html'));
 });
 app.use('/master/script.js',function(req,res){
