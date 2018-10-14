@@ -41,6 +41,8 @@ socket.on('chat', function(data){
 
 
 var marker = false;
+var skipmark = false;
+var prevmark = false;
 const hash = window.location.hash
 .substring(1)
 .split('&')
@@ -58,7 +60,7 @@ devid = '';
 
 const authEndpoint = 'https://accounts.spotify.com/authorize';
 
-var currentplaylist = '["spotify:track:51KKQAgYFoJHgVIuJWHdHb","spotify:track:3ctALmweZBapfBdFiIVpji"]';
+var currentplaylist = '["spotify:track:51KKQAgYFoJHgVIuJWHdHb","spotify:track:3ctALmweZBapfBdFiIVpji","spotify:track/38W2RzUYzBRhYqOlnGGFAh"]';
 
 // Replace with your app's client ID, redirect URI and desired scopes
 const clientId = 'c45b9f08b8f94e9fb5650ab6bf202238';
@@ -100,10 +102,18 @@ window.onSpotifyPlayerAPIReady = () => {
 	//				});
 		socket.emit('time', {
 						stamp: state.position,
-						st: marker
+						st: marker,
+						skm: skipmark,
+						prv: prevmark
 					});
 		if(marker){
 			player.pause();
+		}
+		if(skipmark){
+			skipmark = false;
+		}
+		if(prevmark){
+			prevmark = false;
 		}
 		console.log(marker)	;
 		$('#current-track').attr('src', state.track_window.current_track.album.images[0].url);
@@ -136,6 +146,30 @@ window.onSpotifyPlayerAPIReady = () => {
 			}
 		});
 	});
+	skipbtn = document.getElementById("skip");
+	skipbtn.addEventListener('click', function(){
+		skipmark=true;
+		$.ajax({
+			url: "https://api.spotify.com/v1/me/player/play?device_id=" + devid,
+			type: "PUT",
+			beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + _token );},
+			success: function(data) {
+				player.nextTrack();
+			}
+		});
+	});
+	backbtn = document.getElementById("back");
+	backbtn.addEventListener('click', function(){
+		prevmark=true;
+		$.ajax({
+			url: "https://api.spotify.com/v1/me/player/play?device_id=" + devid,
+			type: "PUT",
+			beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + _token );},
+			success: function(data) {
+				player.previousTrack();
+			}
+		});
+	});
 	// Play a specified track on the Web Playback SDK's device ID
 	function play(device_id, currp) {
 		$.ajax({
@@ -162,4 +196,7 @@ window.onSpotifyPlayerAPIReady = () => {
 			}
 		});
 	}
+}
+function formaturi(str,st){
+
 }
