@@ -58,7 +58,7 @@ devid = '';
 
 const authEndpoint = 'https://accounts.spotify.com/authorize';
 
-var currentplaylist = '["spotify:track:51KKQAgYFoJHgVIuJWHdHb","spotify:track:3ctALmweZBapfBdFiIVpji"]';
+var currentplaylist = '["spotify:track:51KKQAgYFoJHgVIuJWHdHb","spotify:track:3ctALmweZBapfBdFiIVpji","spotify:track/38W2RzUYzBRhYqOlnGGFAh"]';
 socket.on('playlist', function(list){
 	currentplaylist = list.lists;
 });
@@ -129,6 +129,12 @@ window.onSpotifyPlayerAPIReady = () => {
 					player.togglePlay().then(() => {
 					  console.log('Toggled playback!');
 					});
+				}
+				else if(pos.skm){
+					player.nextTrack();
+				}
+				else if(pos.prv){
+					player.previousTrack();
 				}
 				else{
 					marker = false;

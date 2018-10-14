@@ -60,6 +60,9 @@ io.on('connection',function(socket){
 	socket.on('paus',function(pau){
 		io.sockets.emit('paus',pau);
 	});
+	socket.on('skip',function(ski){
+		io.sockets.emit('skip',ski);
+	});
 	socket.on('playlist',function(list){
 		io.sockets.emit('playlist',list);
 	});
