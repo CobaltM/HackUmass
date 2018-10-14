@@ -40,7 +40,7 @@ socket.on('chat', function(data){
 
 
 
-
+var marker = false;
 const hash = window.location.hash
 .substring(1)
 .split('&')
@@ -99,16 +99,13 @@ window.onSpotifyPlayerAPIReady = () => {
 	//					lists: currentplaylist
 	//				});
 		socket.emit('time', {
-						stamp: state.position
-					});
-		if(state.paused)
-			socket.emit('paus', {
-						pau: false
-					});
-		else
-			socket.emit('paus', {
-						pau: true
-					});
+						stamp: state.position,
+						st: marker
+					});	
+		if(marker){
+			player.pause();
+		}
+		console.log(marker)	;
 		$('#current-track').attr('src', state.track_window.current_track.album.images[0].url);
 		$('#current-track-name').text(state.track_window.current_track.name);
 	});
@@ -125,25 +122,17 @@ window.onSpotifyPlayerAPIReady = () => {
 	//toggle 
 	pausebtn = document.getElementById("pause");
 	pausebtn.addEventListener('click', function(){
+		if(marker){
+			marker=false;
+		}
+		else
+			marker=true;
 		$.ajax({
 			url: "https://api.spotify.com/v1/me/player/play?device_id=" + devid,
 			type: "PUT",
 			beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + _token );},
 			success: function(data) { 
 				player.togglePlay();
-				player.getCurrentState().then(state => {
-					if (!state) {
-						console.error('User is not playing music through the Web Playback SDK');
-						return;
-					}
-					//scaffolding
-					socket.emit('chat', {
-						message: state.position,
-						handle: 'server'
-					});
-					//end scaffolding
-					console.log('Postition: ',state.position)
-				});
 			}
 		});
 	});
@@ -174,7 +163,6 @@ window.onSpotifyPlayerAPIReady = () => {
 		});
 	}
 }
-
 
 
 

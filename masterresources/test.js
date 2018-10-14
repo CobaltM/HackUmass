@@ -35,12 +35,12 @@ socket.on('chat', function(data){
 
 
 
+var ayp = false;
 
 
 
 
 
-var marker = false;
 const hash = window.location.hash
 .substring(1)
 .split('&')
@@ -58,13 +58,11 @@ devid = '';
 
 const authEndpoint = 'https://accounts.spotify.com/authorize';
 
-var currentplaylist = '["spotify:track:51KKQAgYFoJHgVIuJWHdHb","spotify:track:3ctALmweZBapfBdFiIVpji"]';
-socket.on('playlist', function(list){
-	currentplaylist = list.lists;
-});
+var currentplaylist = '["spotify:track:1K13OsIMc0HLgEJHZoWH78","spotify:track:3ctALmweZBapfBdFiIVpji"]';
+
 // Replace with your app's client ID, redirect URI and desired scopes
 const clientId = 'c45b9f08b8f94e9fb5650ab6bf202238';
-const redirectUri = 'http://localhost:3000/room/';
+const redirectUri = 'http://localhost:3000/master/';
 const scopes = [
 'streaming',
 'playlist-read-private',
@@ -97,14 +95,16 @@ window.onSpotifyPlayerAPIReady = () => {
 	// Playback status updates
 	player.on('player_state_changed', state => {
 		console.log(state)
-		if(marker){
-			player.pause();
-		}
-		else
-			player.resume();
+	//	socket.emit('playlist', {
+	//					lists: currentplaylist
+	//				});
+	//	socket.emit('time', {
+	//					stamp: state.position
+	//				});
 		$('#current-track').attr('src', state.track_window.current_track.album.images[0].url);
 		$('#current-track-name').text(state.track_window.current_track.name);
 	});
+
 	// Ready
 	player.on('ready', data => {
 		devid = data.device_id;
@@ -115,30 +115,13 @@ window.onSpotifyPlayerAPIReady = () => {
     // Connect to the player!
 	player.connect(); 
 
-	//toggle
-
-	socket.on('time', function(pos){
-		$.ajax({
-			url: "https://api.spotify.com/v1/me/player/play?device_id=" + devid,
-			type: "PUT",
-
-			beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + _token );},
-			success: function(data) { 
-				if(pos.st){
-					marker = true;	
-					player.togglePlay().then(() => {
-					  console.log('Toggled playback!');
-					});
-				}
-				else{
-					marker = false;
-				player.seek(pos.stamp).then(() => {
-				  console.log(pos.st);
-				});
-			}
-				
-			}
-		});
+	//toggle 
+	pausebtn = document.getElementById("pause");
+	pausebtn.addEventListener('click', function(){
+		if(ayp)
+			pause(devid);
+		else
+			resume(devid);
 	});
 	// Play a specified track on the Web Playback SDK's device ID
 	function play(device_id, currp) {
@@ -165,6 +148,94 @@ window.onSpotifyPlayerAPIReady = () => {
 				});
 			}
 		});
+		if(!ayp){
+			var i = setInterval(function(){
+			if(!ayp)
+				gettime(devid);
+			}, 5000);
+		}
+	}
+	function pause(devid){
+		$.ajax({
+			url: "https://api.spotify.com/v1/me/player/play?device_id=" + devid,
+			type: "PUT",
+
+			beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + _token );},
+				success: function(data) { 
+						
+					
+					  
+					  if(ayp){
+					  	player.pause()
+					  	socket.emit('paus', {
+							pau: true
+						});
+						console.log('Paused!');
+					  }
+					  else{
+					  	player.resume()
+					  	socket.emit('paus', {
+							pau: false
+						});
+						console.log('Resumed!');
+					  }
+				}
+			});
+	}
+	function resume(devid){
+		$.ajax({
+			url: "https://api.spotify.com/v1/me/player/play?device_id=" + devid,
+			type: "PUT",
+
+			beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + _token );},
+				success: function(data) { 
+						
+					player.resume().then(() => {
+					  console.log('Resumed!');
+					  if(ayp){
+					  	socket.emit('paus', {
+							pau: false
+						});
+					  	ayp=false;
+					  }
+					  else
+					  	ayp=true;
+					});
+				}
+			});
+	}
+	function gettime(devid){
+		$.ajax({
+			url: "https://api.spotify.com/v1/me/player/play?device_id=" + devid,
+			type: "PUT",
+
+			beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + _token );},
+				success: function(data) { 
+					player.getCurrentState().then(state => {
+					  socket.emit('time', {
+							stamp: state.position
+						});
+					});
+				}
+			});
+	}
+	function getpause(devid){
+		$.ajax({
+			url: "https://api.spotify.com/v1/me/player/play?device_id=" + devid,
+			type: "PUT",
+
+			beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + _token );},
+				success: function(data) { 
+					player.getCurrentState().then(state => {
+					  socket.emit('paus', {
+							pau: true
+						});
+					  player.pause().then(() => {
+					  console.log('Paused!');
+					});
+					});
+				}
+			});
 	}
 }
 
