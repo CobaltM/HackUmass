@@ -62,7 +62,7 @@ var currentplaylist = '["spotify:track:51KKQAgYFoJHgVIuJWHdHb","spotify:track:3c
 
 // Replace with your app's client ID, redirect URI and desired scopes
 const clientId = 'c45b9f08b8f94e9fb5650ab6bf202238';
-const redirectUri = 'https://spotifysync.herokuapp.com/';
+const redirectUri = 'https://spotifysync.herokuapp.com/master/';
 const scopes = [
 'streaming',
 'playlist-read-private',
